@@ -55,7 +55,7 @@ services:
       POSTGRES_PASSWORD: airflow
       POSTGRES_DB: airflow
     volumes:
-      - postgres-db-volume:/var/lib/postgresql/data
+      - postgres-db:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "airflow"]
       interval: 5s
@@ -65,7 +65,9 @@ services:
   redis:
     image: redis:latest
     expose:
-      - 6379
+      - 6379    
+    volumes:
+      - redis-db:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -231,7 +233,9 @@ services:
       - airflow
 
 volumes:
-  postgres-db-volume:
+  postgres-db:
+    driver: local
+  redis-db:
     driver: local
   es_data:
     driver: local
