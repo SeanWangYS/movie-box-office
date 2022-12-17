@@ -1,5 +1,6 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator, BranchPythonOperator
+from hooks.elastic.elastic_hook import ElasticHook
 
 from datetime import datetime
 import requests
@@ -10,12 +11,37 @@ default_args = {
     'start_date': datetime(2022, 12, 10), 
     'schedule_interval': '@daily'
 }
-    
+
+def _create_index():
+    index = 'movie_box_office'
+    body = {
+        "mappings":{
+            "properties": {
+                "country": {"type": "keyword"}, 
+                "name": {"type": "text"}, 
+                "releaseDate": {"type": "date"}, 
+                "issue": {"type": "keyword"}, 
+                "produce": {"type": "keyword"}, 
+                "theaterCount": {"type": "integer"}, 
+                "tickets": {"type": "integer"}, 
+                "ticketChangeRate": {"type": "float"}, 
+                "amounts": {"type": "float"}, 
+                "totalTickets": {"type": "integer"}, 
+                "totalAmounts": {"type": "float"}, 
+                "date": {"type": "date"}, 
+            }
+        }
+    }
+    hook = ElasticHook()
+    if not hook.index_exists(index):
+        return hook.create_index(index=index, body=body)
+
 def _check_data_info(ti):
     the_date = datetime.strftime(ti.execution_date, '%Y/%m/%d')
     url = f"https://boxoffice.tfi.org.tw/api/export?start={the_date}&end={the_date}"
     r = requests.get(url)
-    if r.status_code == 200:
+    if (r.status_code == 200) and json.loads(r.text)['list']:
+        # 如何對當天未上傳的資料，未來做retry，或是透過GAD觸動retry，例如讓dgaRun等三天
         return 'fetch_data'
     else:
         return 'end_mission'
@@ -51,10 +77,18 @@ def _process_data(ti):
         })
     return actions
 
-def _store_data():pass
+def _store_data(ti):
+    actions = ti.xcom_pull(task_ids='process_data')
+    hook = ElasticHook()
+    return hook.add_docs(actions)
 
-with DAG('box_office_processing', catchup=False, default_args=default_args) as dag:
+with DAG('box_office_processing', catchup=True, default_args=default_args) as dag:
     
+    create_index = PythonOperator(
+        task_id='create_index',
+        python_callable=_create_index,
+    )
+
     check_data_info = PythonOperator(
         task_id='check_data_info',
         python_callable=_check_data_info,
@@ -80,9 +114,12 @@ with DAG('box_office_processing', catchup=False, default_args=default_args) as d
         python_callable=_process_data,
     )
 
-    # store_data = 
+    store_data = PythonOperator(
+        task_id='store_data',
+        python_callable=_store_data,
+    )
 
     # send_notification = 
 
-    check_data_info >> decide_next_step >> [fetch_data, end_mission]
-    fetch_data >> process_data
+    create_index >> check_data_info >> decide_next_step >> [fetch_data, end_mission]
+    fetch_data >> process_data >> store_data
