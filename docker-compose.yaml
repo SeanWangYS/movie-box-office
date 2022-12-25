@@ -84,7 +84,7 @@ services:
     ports:
       - 9200:9200
     volumes:
-      - es_data:/usr/share/elasticsearch/data
+      - elastic-db:/usr/share/elasticsearch/data
 
   kibana:
     image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
@@ -254,5 +254,5 @@ volumes:
     driver: local
   redis-db:
     driver: local
-  es_data:
+  elastic-db:
     driver: local
