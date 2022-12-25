@@ -1,5 +1,5 @@
 # movie-box-office
-Autometically collect daily movie box office on [DATA.GOV.TW(政府資料開放平臺)](https://data.gov.tw/dataset/94224), 
+Automatically collect daily movie box office on [DATA.GOV.TW(政府資料開放平臺)](https://data.gov.tw/dataset/94224), 
 and count the most popular movies within 7days. Show statistics with Kibana.
 
 ## Services I used in this project
