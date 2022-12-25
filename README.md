@@ -9,7 +9,10 @@ and count the most popular movies within 7days. Show statistics with Kibana.
 - Kibana (a visualization tool for building dashborads)  
 
 ## Monitoring workflow operation
+<img src="pics/monitor_view.png">  
 
 ## Workflow(DAG) 
+<img src="pics/workflow.png">  
 
 ## Dashboard to display Top5 moives
+<img src="pics/dashboard.png">  
