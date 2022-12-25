@@ -36,8 +36,7 @@ class ElasticHook(BaseHook):
     def add_docs(self, actions):
         return helpers.bulk(self.es, actions)
         
-
+# for adding the elastic hook to the plugin system manager
 class AirflowElasticPlugin(AirflowPlugin):
-    name = 'elasticsearch'
-    # for adding the elastic hook to the plugin system manager
+    name = 'elasticsearch' # the name wiil be registed on Web UI interface
     hooks = [ElasticHook]
