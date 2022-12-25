@@ -3,9 +3,10 @@ Autometically collect daily movie box office on [DATA.GOV.TW(政府資料開放�
 and count the most popular movies within 7days. Show statistics with Kibana.
 
 ## Service I used in this project
-docker（for building enviroment）
-Airflow (for developing, scheduling, and monitoring batch-oriented workflows)
-ElasticSearch and Kibana (a Database and a visualization tool for saving data and building dashborads)  
+- docker（for building enviroment）
+- Airflow (for developing, scheduling, and monitoring batch-oriented workflows)
+- ElasticSearch and Kibana (a Database for saving data)  
+- Kibana (a visualization tool for building dashborads)  
 
 ## Monitoring workflow operation
 
