@@ -5,6 +5,8 @@ and count the most popular movies within 7days. Show statistics with Kibana.
 ## Services I used in this project
 - Docker（for building enviroment）
 - Airflow (for developing, scheduling, and monitoring batch-oriented workflows)
+  - developed a GAD to process data from open source data to ElasticSearch
+  - developed a Hook class to access and load data into ElasticSearch
 - ElasticSearch (a Database for saving data)  
 - Kibana (a visualization tool for building dashborads)  
 
