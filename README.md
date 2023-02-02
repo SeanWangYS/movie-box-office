@@ -7,7 +7,7 @@ and count the most popular movies within 7days. Show statistics with Kibana.
 - Airflow (for developing, scheduling, and monitoring batch-oriented workflows)
   - developed a GAD to process data from open source data to ElasticSearch
   - developed a Hook class to access and load data into ElasticSearch
-- ElasticSearch (a Database for saving data)  
+- ElasticSearch (a database for saving data)  
 - Kibana (a visualization tool for building dashborads)  
 
 ## Monitoring workflow operation
